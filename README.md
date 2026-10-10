@@ -1,6 +1,6 @@
 # To-Do List
 
-Aplicação web para organizar tarefas do dia a dia. O projeto está na etapa de setup; os requisitos e o visual das telas serão desenvolvidos em conjunto pelo grupo.
+Aplicação web para organizar tarefas do dia a dia. O projeto usa JavaScript no navegador e LocalStorage para persistir os dados, sem servidor ou banco de dados externo.
 
 <p align="center">
   <img alt="HTML5" src="https://img.shields.io/badge/HTML5-estrutura-E34F26?style=flat&logo=html5&logoColor=white">
@@ -14,7 +14,7 @@ Aplicação web para organizar tarefas do dia a dia. O projeto está na etapa de
 
 ## Sobre o projeto
 
-A aplicação permitirá cadastrar e consultar tarefas, marcar tarefas como concluídas, editar e excluir registros e filtrar tarefas por status. Os dados serão armazenados no navegador com LocalStorage, sem banco de dados externo.
+A aplicação permite cadastrar e consultar tarefas, marcar tarefas como concluídas, editar e excluir registros, filtrar por status e pesquisar pelo título ou descrição. A lógica está sendo preparada antes da integração com as telas.
 
 ## Tecnologias
 
@@ -32,15 +32,57 @@ ToDo_List/
 ├── index.html
 ├── style.css
 ├── main.js
+├── package.json            # Comando local dos testes
 ├── js/
-│   ├── taskService.js       # Regras e operações de tarefas
-│   └── taskStorage.js       # Acesso ao LocalStorage
+│   ├── taskService.js       # Regras e operações das tarefas
+│   └── taskStorage.js       # Acesso ao armazenamento local
+├── tests/
+│   ├── taskService.test.js  # Testes das regras das tarefas
+│   └── taskStorage.test.js  # Testes do armazenamento
 └── README.md
 ```
 
-Cada arquivo tem uma responsabilidade definida. Os módulos JavaScript começam como pontos de extensão, sem funcionalidades implementadas, para que a lógica seja acrescentada durante o desenvolvimento.
+Cada arquivo tem uma responsabilidade definida. `taskService.js` contém as regras e operações; `taskStorage.js` centraliza a leitura e gravação no LocalStorage. `main.js` será o ponto de integração com as telas.
 
-O `index.html` será uma única página: a listagem e o estado vazio compartilham a tela inicial, e o formulário será reutilizado para adicionar e editar tarefas. O `main.js` controlará a transição entre esses estados.
+O `index.html` será uma única página: a listagem e o estado vazio compartilham a tela inicial, e o formulário será reutilizado para adicionar e editar tarefas. A apresentação e os eventos visuais ainda serão integrados.
+
+## Lógica de tarefas
+
+O serviço exporta operações independentes da interface. Os nomes e os campos da API estão em português para facilitar a colaboração:
+
+- `criarTarefa(dados)` valida e salva uma tarefa nova como pendente, gerando o identificador automaticamente.
+- `listarTarefas({ filtro, consulta })` retorna tarefas filtradas e pesquisadas.
+- `obterTarefa(id)` localiza uma tarefa ou retorna `null`.
+- `atualizarTarefa(id, dados)` atualiza título, descrição e data limite.
+- `definirStatusTarefa(id, status)` altera o status da tarefa.
+- `excluirTarefa(id)` remove e retorna a tarefa excluída.
+- `obterResumoTarefas()` calcula os totais geral e por status.
+
+Exemplo de uso em um módulo JavaScript da interface:
+
+```js
+import { criarTarefa, listarTarefas, FILTRO_TAREFA } from './js/taskService.js'
+
+criarTarefa({
+  titulo: 'Estudar para a prova',
+  descricao: 'Revisar os exercícios',
+  dataLimite: '2026-11-12'
+})
+
+const tarefasPendentes = listarTarefas({ filtro: FILTRO_TAREFA.PENDENTE })
+```
+
+Cada tarefa possui `id`, `titulo`, `descricao`, `dataLimite`, `status`, `criadoEm` e `atualizadoEm`. Os status são `pendente`, `em_andamento` e `finalizado`. O armazenamento persiste as tarefas na chave `todo-list.tarefas.v1`.
+
+## Testes do backend
+
+Os testes usam o executor nativo do Node.js e um armazenamento em memória, sem precisar abrir o navegador ou instalar dependências:
+
+```sh
+npm test
+```
+
+Eles cobrem criação e validação, edição, os três status, filtros, pesquisa, resumo, exclusão e persistência.
 
 ## Como executar
 
@@ -70,12 +112,31 @@ As imagens das telas serão adicionadas após a definição visual da interface.
 
 <!-- Adicionar aqui as capturas da versão mobile. -->
 
-## Pendências de definição
+## Status e pendências
 
-- [ ] Definir o favicon da página e adicionar o arquivo ao projeto.
-- [ ] Confirmar se a tarefa terá data limite opcional, como no desenho inicial.
-- [ ] Fechar os estados de validação e interação: campos obrigatórios, mensagens de erro, foco por teclado e confirmação de exclusão.
-- [ ] Validar a paleta final e os pontos de quebra para desktop e mobile com quem fará o visual.
+### Backend
+
+- [x] Implementar operações de criação, consulta, edição, alteração de status e exclusão de tarefas.
+- [x] Validar título, descrição e data limite opcional; gerar identificadores automaticamente.
+- [x] Implementar os status `pendente`, `em_andamento` e `finalizado`, com filtros e resumo por status.
+- [x] Persistir e validar tarefas no LocalStorage.
+- [x] Adicionar testes locais para as regras e o armazenamento (`npm test`).
+
+### Frontend e integração
+
+- [ ] Implementar as telas e os estilos da aplicação.
+- [ ] Integrar a interface ao backend pelas operações documentadas acima.
+- [ ] Definir os estados visuais e de interação: lista vazia, validação, mensagens de erro, foco por teclado e confirmação de exclusão.
+- [ ] Confirmar no desenho final a apresentação da data limite opcional.
+- [ ] Validar paleta de cores e responsividade em desktop e mobile.
+- [ ] Definir e adicionar o favicon.
+- [ ] Adicionar capturas de tela após a implementação visual.
+
+### Sobre a entrega
+
+- [ ] Realizar testes de integração
+- [ ] Documentação do projeto
+- [ ] Apresentação em PDF
 
 ## Licença
 
