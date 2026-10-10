@@ -1,0 +1,8 @@
+{
+  "name": "lista-de-tarefas",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  }
+}
