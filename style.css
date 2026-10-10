@@ -1,0 +1,46 @@
+:root {
+  color-scheme: light;
+
+  /* Tokens globais: paleta inicial baseada na proposta visual. */
+  --color-primary: #1e3a8a;
+  --color-primary-dark: #17336f;
+  --color-secondary: #3882f6;
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+
+  --color-background: #f8fafc;
+  --color-surface: #ffffff;
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+
+  --font-family-base: "Poppins", sans-serif;
+}
+
+/* Base global e normalização mínima. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: var(--font-family-base);
+  background: var(--color-background);
+  color: var(--color-text);
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+}
+
+/*
+  Próximas áreas de estilos, após a definição visual:
+  - estrutura compartilhada da aplicação;
+  - listagem e estado vazio;
+  - formulário de adicionar/editar;
+  - estados responsivos para desktop e mobile.
+*/
