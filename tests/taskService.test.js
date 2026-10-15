@@ -67,11 +67,22 @@ describe("criarTarefa", () => {
     assert.notEqual(tarefa.id, "");
   });
 
-  it("rejeita título vazio, dados inválidos e data inexistente sem salvar", () => {
+  it("cria uma tarefa com o status inicial informado", () => {
+    const armazenamento = new ArmazenamentoFalso();
+    const tarefa = criarTarefaDeTeste(armazenamento, { status: STATUS_TAREFA.FINALIZADO });
+
+    assert.equal(tarefa.status, STATUS_TAREFA.FINALIZADO);
+  });
+
+  it("rejeita título vazio, dados inválidos, status desconhecido e data inexistente sem salvar", () => {
     const armazenamento = new ArmazenamentoFalso();
 
     assert.throws(() => criarTarefa({ titulo: "  " }, { armazenamento }), /obrigatório/);
     assert.throws(() => criarTarefa(null, { armazenamento }), /objeto/);
+    assert.throws(
+      () => criarTarefa({ titulo: "Tarefa", status: "cancelada" }, { armazenamento }),
+      /Status de tarefa inválido/,
+    );
     assert.throws(
       () => criarTarefa({ titulo: "Prazo", dataLimite: "2026-02-30" }, { armazenamento }),
       /data limite válida/,

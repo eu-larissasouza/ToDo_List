@@ -14,7 +14,7 @@ Aplicação web para organizar tarefas do dia a dia. O projeto usa JavaScript no
 
 ## Sobre o projeto
 
-A aplicação permite cadastrar e consultar tarefas, marcar tarefas como concluídas, editar e excluir registros, filtrar por status e pesquisar pelo título ou descrição. A lógica está sendo preparada antes da integração com as telas.
+A aplicação permite cadastrar e consultar tarefas, marcar tarefas como concluídas, editar e excluir registros, filtrar por status e pesquisar pelo título ou descrição. A interface já está integrada à lógica das tarefas, com layout responsivo para celular, tablet e notebook.
 
 ## Tecnologias
 
@@ -31,8 +31,11 @@ A aplicação permite cadastrar e consultar tarefas, marcar tarefas como conclu�
 ToDo_List/
 ├── index.html
 ├── style.css
-├── main.js
-├── package.json            # Comando local dos testes
+├── main.js                  # Integração entre as telas e o backend
+├── favicon.png              # Ícone da aba do navegador
+├── app.js                   # Gerado por `npm run build` (não editar à mão)
+├── build.mjs                # Gera o app.js a partir do main.js e de js/
+├── package.json            # Comandos de teste e build
 ├── js/
 │   ├── taskService.js       # Regras e operações das tarefas
 │   └── taskStorage.js       # Acesso ao armazenamento local
@@ -42,15 +45,17 @@ ToDo_List/
 └── README.md
 ```
 
-Cada arquivo tem uma responsabilidade definida. `taskService.js` contém as regras e operações; `taskStorage.js` centraliza a leitura e gravação no LocalStorage. `main.js` será o ponto de integração com as telas.
+Cada arquivo tem uma responsabilidade definida. `taskService.js` contém as regras e operações; `taskStorage.js` centraliza a leitura e gravação no LocalStorage. `main.js` é o ponto de integração com as telas.
 
-O `index.html` será uma única página: a listagem e o estado vazio compartilham a tela inicial, e o formulário será reutilizado para adicionar e editar tarefas. A apresentação e os eventos visuais ainda serão integrados.
+O `index.html` é uma única página: a listagem e o estado vazio compartilham a tela inicial, e o formulário é reutilizado para adicionar e editar tarefas.
+
+O `app.js` é a mesma aplicação em um arquivo só, sem `import`, para que o `index.html` também abra com duplo clique (navegadores bloqueiam módulos em `file://`). Ele é gerado automaticamente; quem edita o código deve alterar o `main.js` e os arquivos de `js/`.
 
 ## Lógica de tarefas
 
 O serviço exporta operações independentes da interface. Os nomes e os campos da API estão em português para facilitar a colaboração:
 
-- `criarTarefa(dados)` valida e salva uma tarefa nova como pendente, gerando o identificador automaticamente.
+- `criarTarefa(dados)` valida e salva uma tarefa nova, gerando o identificador automaticamente; o status inicial é opcional e fica pendente por padrão.
 - `listarTarefas({ filtro, consulta })` retorna tarefas filtradas e pesquisadas.
 - `obterTarefa(id)` localiza uma tarefa ou retorna `null`.
 - `atualizarTarefa(id, dados)` atualiza título, descrição e data limite.
@@ -66,7 +71,8 @@ import { criarTarefa, listarTarefas, FILTRO_TAREFA } from './js/taskService.js'
 criarTarefa({
   titulo: 'Estudar para a prova',
   descricao: 'Revisar os exercícios',
-  dataLimite: '2026-11-12'
+  dataLimite: '2026-11-12',
+  status: 'em_andamento'
 })
 
 const tarefasPendentes = listarTarefas({ filtro: FILTRO_TAREFA.PENDENTE })
@@ -86,8 +92,20 @@ Eles cobrem criação e validação, edição, os três status, filtros, pesquis
 
 ## Como executar
 
+**Opção 1: Live Server (recomendada para desenvolver)**
+
 1. Instale a extensão **Live Server** no VS Code.
 2. Abra `index.html` com **Open with Live Server**.
+
+**Opção 2: duplo clique no `index.html`**
+
+A página abre direto no navegador usando o `app.js`. Depois de alterar o `main.js` ou os arquivos de `js/`, gere o `app.js` de novo:
+
+```sh
+npm run build
+```
+
+As tarefas ficam salvas no LocalStorage do navegador, separadas por endereço: `127.0.0.1:5500`, `localhost:5500` e a página aberta por duplo clique mostram listas diferentes.
 
 A fonte Poppins e os ícones do Font Awesome são carregados pela internet.
 
@@ -102,15 +120,13 @@ A fonte Poppins e os ícones do Font Awesome são carregados pela internet.
 
 ## Capturas de tela
 
-As imagens das telas serão adicionadas após a definição visual da interface.
-
 ### Desktop
 
-<!-- Adicionar aqui as capturas da versão desktop. -->
+![Aplicação em desktop](./docs/imgs/todo-desktop.mp4)
 
 ### Mobile
 
-<!-- Adicionar aqui as capturas da versão mobile. -->
+![Aplicação em mobile](./docs/imgs/todo-mobile.mp4)
 
 ## Status e pendências
 
@@ -124,13 +140,13 @@ As imagens das telas serão adicionadas após a definição visual da interface.
 
 ### Frontend e integração
 
-- [ ] Implementar as telas e os estilos da aplicação.
-- [ ] Integrar a interface ao backend pelas operações documentadas acima.
-- [ ] Definir os estados visuais e de interação: lista vazia, validação, mensagens de erro, foco por teclado e confirmação de exclusão.
-- [ ] Confirmar no desenho final a apresentação da data limite opcional.
-- [ ] Validar paleta de cores e responsividade em desktop e mobile.
-- [ ] Definir e adicionar o favicon.
-- [ ] Adicionar capturas de tela após a implementação visual.
+- [x] Implementar as telas e os estilos da aplicação.
+- [x] Integrar a interface ao backend pelas operações documentadas acima.
+- [x] Definir os estados visuais e de interação: lista vazia, validação, mensagens de erro, foco por teclado e confirmação de exclusão.
+- [x] Confirmar no desenho final, a apresentação da data limite opcional.
+- [x] Validar paleta de cores e responsividade em desktop e mobile.
+- [x] Definir e adicionar o favicon.
+- [x] Adicionar capturas de tela após a implementação visual.
 
 ### Sobre a entrega
 
