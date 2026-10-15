@@ -122,11 +122,20 @@ A fonte Poppins e os ícones do Font Awesome são carregados pela internet.
 
 ### Desktop
 
-![Aplicação em desktop](./docs/imgs/todo-desktop.mp4)
+https://github.com/user-attachments/assets/032a6098-4381-4202-97fe-b544363b1c14
+
+
 
 ### Mobile
 
-![Aplicação em mobile](./docs/imgs/todo-mobile.mp4)
+
+https://github.com/user-attachments/assets/ffd66c2b-78fc-40de-b6eb-64ac7c885d45
+
+
+
+
+
+
 
 ## Status e pendências
 
