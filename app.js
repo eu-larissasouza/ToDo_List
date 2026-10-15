@@ -174,18 +174,24 @@ function obterTarefa(idTarefa, { armazenamento } = {}) {
   return carregarTarefas(armazenamento).find((tarefa) => tarefa.id === idTarefa) ?? null;
 }
 
-/** Cria uma tarefa pendente. A descrição e a data limite são opcionais. */
+/** Cria uma tarefa; descrição, data limite e status inicial são opcionais. */
 function criarTarefa(
   dados,
   { armazenamento, agora = () => new Date(), gerarIdentificador = gerarId } = {},
 ) {
   const camposTarefa = normalizarDadosTarefa(dados);
+  const status = dados.status === undefined || dados.status === ""
+    ? STATUS_TAREFA.PENDENTE
+    : dados.status;
+  if (!Object.values(STATUS_TAREFA).includes(status)) {
+    throw new TypeError("Status de tarefa inválido.");
+  }
   const tarefas = carregarTarefas(armazenamento);
   const dataHora = obterDataHoraAgora(agora);
   const tarefa = {
     id: gerarIdentificador(),
     ...camposTarefa,
-    status: STATUS_TAREFA.PENDENTE,
+    status,
     criadoEm: dataHora,
     atualizadoEm: dataHora,
   };
@@ -400,6 +406,8 @@ function abrirFormulario(id = null) {
   $("f-titulo").value = tarefa?.titulo ?? "";
   $("f-descricao").value = tarefa?.descricao ?? "";
   $("f-data").value = tarefa?.dataLimite ?? "";
+  $("f-status-group").hidden = Boolean(tarefa);
+  $("f-status").value = STATUS_TAREFA.PENDENTE;
   mostrarErroForm("");
   $("dlg-form").showModal();
   $("f-titulo").focus();
@@ -417,6 +425,7 @@ $("form").addEventListener("submit", (evento) => {
     titulo: $("f-titulo").value,
     descricao: $("f-descricao").value,
     dataLimite: $("f-data").value,
+    status: $("f-status").value,
   };
   try {
     if (estado.editandoId) {

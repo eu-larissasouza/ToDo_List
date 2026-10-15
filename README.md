@@ -55,7 +55,7 @@ O `app.js` é a mesma aplicação em um arquivo só, sem `import`, para que o `i
 
 O serviço exporta operações independentes da interface. Os nomes e os campos da API estão em português para facilitar a colaboração:
 
-- `criarTarefa(dados)` valida e salva uma tarefa nova como pendente, gerando o identificador automaticamente.
+- `criarTarefa(dados)` valida e salva uma tarefa nova, gerando o identificador automaticamente; o status inicial é opcional e fica pendente por padrão.
 - `listarTarefas({ filtro, consulta })` retorna tarefas filtradas e pesquisadas.
 - `obterTarefa(id)` localiza uma tarefa ou retorna `null`.
 - `atualizarTarefa(id, dados)` atualiza título, descrição e data limite.
@@ -71,7 +71,8 @@ import { criarTarefa, listarTarefas, FILTRO_TAREFA } from './js/taskService.js'
 criarTarefa({
   titulo: 'Estudar para a prova',
   descricao: 'Revisar os exercícios',
-  dataLimite: '2026-11-12'
+  dataLimite: '2026-11-12',
+  status: 'em_andamento'
 })
 
 const tarefasPendentes = listarTarefas({ filtro: FILTRO_TAREFA.PENDENTE })
@@ -119,15 +120,13 @@ A fonte Poppins e os ícones do Font Awesome são carregados pela internet.
 
 ## Capturas de tela
 
-As imagens das telas serão adicionadas após a definição visual da interface.
-
 ### Desktop
 
-<!-- Adicionar aqui as capturas da versão desktop. -->
+![Aplicação em desktop](./docs/imgs/todo-desktop.mp4)
 
 ### Mobile
 
-<!-- Adicionar aqui as capturas da versão mobile. -->
+![Aplicação em mobile](./docs/imgs/todo-mobile.mp4)
 
 ## Status e pendências
 
@@ -144,10 +143,10 @@ As imagens das telas serão adicionadas após a definição visual da interface.
 - [x] Implementar as telas e os estilos da aplicação.
 - [x] Integrar a interface ao backend pelas operações documentadas acima.
 - [x] Definir os estados visuais e de interação: lista vazia, validação, mensagens de erro, foco por teclado e confirmação de exclusão.
-- [x] Confirmar no desenho final a apresentação da data limite opcional.
-- [ ] Validar paleta de cores e responsividade em desktop e mobile.
+- [x] Confirmar no desenho final, a apresentação da data limite opcional.
+- [x] Validar paleta de cores e responsividade em desktop e mobile.
 - [x] Definir e adicionar o favicon.
-- [ ] Adicionar capturas de tela após a implementação visual.
+- [x] Adicionar capturas de tela após a implementação visual.
 
 ### Sobre a entrega
 

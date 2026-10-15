@@ -91,6 +91,15 @@
         <label for="f-data">Data limite <span class="opcional">(opcional)</span></label>
         <input type="date" id="f-data" name="dataLimite" />
 
+        <div id="f-status-group">
+          <label for="f-status">Status inicial <span class="opcional">(opcional)</span></label>
+          <select id="f-status" name="status">
+            <option value="pendente" selected>Pendente</option>
+            <option value="em_andamento">Em andamento</option>
+            <option value="finalizado">Finalizada</option>
+          </select>
+        </div>
+
         <p class="erro-campo" id="f-erro" role="alert" hidden></p>
 
         <div class="dlg-acoes">

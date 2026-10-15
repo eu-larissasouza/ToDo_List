@@ -112,18 +112,24 @@ export function obterTarefa(idTarefa, { armazenamento } = {}) {
   return carregarTarefas(armazenamento).find((tarefa) => tarefa.id === idTarefa) ?? null;
 }
 
-/** Cria uma tarefa pendente. A descrição e a data limite são opcionais. */
+/** Cria uma tarefa; descrição, data limite e status inicial são opcionais. */
 export function criarTarefa(
   dados,
   { armazenamento, agora = () => new Date(), gerarIdentificador = gerarId } = {},
 ) {
   const camposTarefa = normalizarDadosTarefa(dados);
+  const status = dados.status === undefined || dados.status === ""
+    ? STATUS_TAREFA.PENDENTE
+    : dados.status;
+  if (!Object.values(STATUS_TAREFA).includes(status)) {
+    throw new TypeError("Status de tarefa inválido.");
+  }
   const tarefas = carregarTarefas(armazenamento);
   const dataHora = obterDataHoraAgora(agora);
   const tarefa = {
     id: gerarIdentificador(),
     ...camposTarefa,
-    status: STATUS_TAREFA.PENDENTE,
+    status,
     criadoEm: dataHora,
     atualizadoEm: dataHora,
   };

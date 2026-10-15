@@ -607,6 +607,7 @@ dialog label {
 }
 
 dialog input,
+dialog select,
 dialog textarea {
   width: 100%;
   padding: 10px 12px;
