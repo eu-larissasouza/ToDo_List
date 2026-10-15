@@ -3,45 +3,128 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta
-      name="description"
-      content="Aplicação web para organizar tarefas do dia a dia."
-    />
+    <meta name="description" content="Aplicação web para organizar tarefas do dia a dia." />
     <meta name="theme-color" content="#1e3a8a" />
     <title>To-Do List</title>
-    <!-- TODO: definir o favicon e incluir seu link aqui quando o ícone estiver pronto. -->
+    <link rel="icon" type="image/png" href="./favicon.png" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"
-    />
-    <link rel="stylesheet" href="./style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css" />
+    <link rel="stylesheet" href="./css/style.css" />
   </head>
   <body>
-    <!-- Ponto de montagem: o JavaScript alternará o estado exibido dentro desta área. -->
-    <main id="app" aria-label="Aplicação To-Do List">
-      <!--
-        ESTADO: LISTAGEM (tela inicial)
-        A interface visual da lista, resumo, busca e filtros será definida no front-end.
-      -->
+    <header class="topo">
+      <div class="container">
+        <div class="topo-linha">
+          <div class="marca">
+            <span class="marca-logo"><img src="./favicon.png" alt="" width="34" height="34" /></span>
+            <div>
+              <h1>Suas tarefas</h1>
+              <p class="data-hoje" id="data-hoje"></p>
+            </div>
+          </div>
+          <button type="button" class="btn btn-claro" id="btn-nova">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i> Nova tarefa
+          </button>
+        </div>
 
-      <!--
-        ESTADO VAZIO (variação da listagem)
-        Mostrar quando não houver tarefas; compartilhar a área da tela inicial.
-      -->
+        <div class="progresso">
+          <div class="progresso-texto">
+            <span id="prog-texto">Sem tarefas ainda</span>
+            <strong id="prog-pct">0%</strong>
+          </div>
+          <div class="progresso-trilho" role="progressbar" aria-label="Progresso das tarefas" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="prog-trilho">
+            <div class="progresso-barra" id="prog-barra"></div>
+          </div>
+        </div>
+      </div>
+    </header>
 
-      <!--
-        ESTADO: FORMULÁRIO DE TAREFA (adicionar/editar)
-        Reutilizar o mesmo formulário nos dois modos; preencher os campos ao editar.
-        A apresentação como página, painel ou modal será definida no desenho visual.
-      -->
-    </main>
-    <script type="module" src="./main.js"></script>
+    <div class="layout container">
+      <aside class="lateral">
+        <h2 class="lateral-titulo">Filtrar por status</h2>
+        <div class="resumo" id="resumo" role="group" aria-label="Filtrar tarefas por status"></div>
+      </aside>
+
+      <main id="app" aria-label="Aplicação To-Do List">
+        <div class="lista-topo">
+          <h2>Minhas tarefas <span class="contagem" id="contagem"></span></h2>
+        </div>
+
+        <div class="busca">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="search" id="busca" placeholder="Buscar por título ou descrição" aria-label="Buscar tarefas" autocomplete="off" />
+        </div>
+
+        <ul class="lista" id="lista" aria-live="polite"></ul>
+
+        <section class="vazio" id="vazio" hidden>
+          <span class="vazio-icone"><i class="fa-regular fa-clipboard" aria-hidden="true"></i></span>
+          <h2 id="vazio-titulo"></h2>
+          <p id="vazio-texto"></p>
+          <button type="button" class="btn btn-primario" id="vazio-acao">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i> Criar primeira tarefa
+          </button>
+        </section>
+
+        <p class="erro-geral" id="erro-geral" role="alert" hidden></p>
+      </main>
+    </div>
+
+    <button type="button" class="fab" id="fab" aria-label="Nova tarefa">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i>
+    </button>
+
+    <!-- Formulário reutilizado para criar e editar -->
+    <dialog id="dlg-form" aria-labelledby="form-titulo">
+      <form id="form" novalidate>
+        <h2 id="form-titulo"></h2>
+
+        <label for="f-titulo">Título</label>
+        <input type="text" id="f-titulo" name="titulo" maxlength="120" required autocomplete="off" aria-describedby="f-erro" />
+
+        <label for="f-descricao">Descrição <span class="opcional">(opcional)</span></label>
+        <textarea id="f-descricao" name="descricao" rows="3" maxlength="500"></textarea>
+
+        <label for="f-data">Data limite <span class="opcional">(opcional)</span></label>
+        <input type="date" id="f-data" name="dataLimite" />
+
+        <p class="erro-campo" id="f-erro" role="alert" hidden></p>
+
+        <div class="dlg-acoes">
+          <button type="button" class="btn btn-neutro" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn-primario" id="f-enviar"></button>
+        </div>
+      </form>
+    </dialog>
+
+    <!-- Confirmação de exclusão -->
+    <dialog id="dlg-excluir" aria-labelledby="excluir-titulo">
+      <form method="dialog" id="form-excluir">
+        <h2 id="excluir-titulo">Excluir tarefa?</h2>
+        <p id="excluir-texto"></p>
+        <div class="dlg-acoes">
+          <button type="button" class="btn btn-neutro" data-fechar>Cancelar</button>
+          <button type="submit" class="btn btn-perigo">Excluir tarefa</button>
+        </div>
+      </form>
+    </dialog>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+      // Live Server / hospedagem: módulos normais (main.js).
+      // Duplo clique no arquivo (file://): versão gerada pelo build (app.js).
+      var el = document.createElement("script");
+      if (location.protocol === "file:") {
+        el.src = "./app.js";
+      } else {
+        el.type = "module";
+        el.src = "./main.js";
+      }
+      document.body.appendChild(el);
+    </script>
   </body>
 </html>
